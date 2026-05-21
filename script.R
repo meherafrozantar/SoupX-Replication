@@ -7,7 +7,8 @@ if (!requireNamespace("Matrix", quietly = TRUE)) install.packages("Matrix")
 if (!requireNamespace("SoupX", quietly = TRUE)) remotes::install_github("constantAmateur/SoupX")
 library(SoupX)
 
-# 2. Load Native Data
+# 2. Ingest Native Data
+# Using SoupX built-in data to bypass broken external links
 data(PBMC5k_Demo) 
 sc = SoupChannel(PBMC5k_Demo$tod, PBMC5k_Demo$toc)
 
