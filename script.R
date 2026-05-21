@@ -2,17 +2,19 @@
 # Framework: Droplet-based single-cell RNA sequencing data decontamination
 
 # 1. Environment Setup
-install.packages(c("remotes", "Matrix"))
-remotes::install_github("constantAmateur/SoupX")
+if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+if (!requireNamespace("Matrix", quietly = TRUE)) install.packages("Matrix")
+if (!requireNamespace("SoupX", quietly = TRUE)) remotes::install_github("constantAmateur/SoupX")
 library(SoupX)
 
-# 2. Source Data Ingestion
-download.file("https://github.com", "pbmc_raw_coords.tsv.gz")
+# 2. Load Native Data
+data(PBMC5k_Demo) 
+sc = SoupChannel(PBMC5k_Demo$tod, PBMC5k_Demo$toc)
 
 # 3. Execution Pipeline
-sc = PBMC_sc
-sc = setClusters(sc, setNames(PBMC_metaData$Cluster, rownames(PBMC_metaData)))
+sc = setClusters(sc, setNames(PBMC5k_Demo$clusters$Cluster, rownames(PBMC5k_Demo$clusters)))
 sc = autoEstCont(sc, forceAccept = TRUE)
 
 # 4. Final Empirical Output
-print(paste("Replicated Global Contamination Fraction (Rho):", sc$fit$rhoEst))
+rho_value = sc$fit$rhoEst
+print(paste("Replicated Global Contamination Fraction (Rho):", round(rho_value, 4)))
